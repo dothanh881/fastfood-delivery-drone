@@ -38,7 +38,8 @@ public class WebSecurityConfig {
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
       .authorizeHttpRequests()
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS toàn cục
-        .requestMatchers("/api/auth/**").permitAll() // Cho phép login/register
+        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // Cho phép login POST
+        .requestMatchers("/api/auth/**").permitAll() // Cho phép toàn bộ /api/auth/**
         // Error page should be publicly accessible to avoid 403 loops
         .requestMatchers(HttpMethod.GET, "/error").permitAll()
         // Public static resources (served via resource handler)
