@@ -1,0 +1,10 @@
+# Root dockerignore
+node_modules
+target
+build
+*.log
+.env
+.DS_Store
+.idea
+.vscode
+

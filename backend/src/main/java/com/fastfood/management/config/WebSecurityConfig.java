@@ -129,7 +129,8 @@ public class WebSecurityConfig {
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:8080",
-      "https://*.replit.dev"
+      "https://*.replit.dev",
+      "https://fastfood-delivery-drone-sgu.vercel.app"
     ));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
