@@ -110,7 +110,8 @@ public class WebSecurityConfig {
         .requestMatchers("/api/swagger-ui/**").permitAll()
 
         .anyRequest().authenticated()
-      );
+      )
+      .anonymous(anonymous -> anonymous.principal("anonymousUser").authorities("ROLE_ANONYMOUS"));
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
