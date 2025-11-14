@@ -37,7 +37,8 @@ public class WebSecurityConfig {
       .csrf().disable()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
       .authorizeHttpRequests()
-       .requestMatchers("/auth/**").permitAll()
+        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS toàn cục
+        .requestMatchers("/api/auth/**").permitAll() // Cho phép login/register
         // Error page should be publicly accessible to avoid 403 loops
         .requestMatchers(HttpMethod.GET, "/error").permitAll()
         // Public static resources (served via resource handler)
@@ -108,8 +109,6 @@ public class WebSecurityConfig {
         .requestMatchers("/api/swagger-ui/**").permitAll()
 
         .anyRequest().authenticated();
-
-    // Thêm JWT filter trước UsernamePasswordAuthenticationFilter
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
