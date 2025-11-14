@@ -33,10 +33,10 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-      .cors().and()
-      .csrf().disable()
-      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-      .authorizeHttpRequests()
+      .csrf(csrf -> csrf.disable())
+      .securityContext(securityContext -> securityContext.requireExplicitSave(false))
+      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS toàn cục
         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // Cho phép login POST
         .requestMatchers("/api/auth/**").permitAll() // Cho phép toàn bộ /api/auth/**
@@ -109,7 +109,8 @@ public class WebSecurityConfig {
         .requestMatchers("/api/v3/api-docs/**").permitAll()
         .requestMatchers("/api/swagger-ui/**").permitAll()
 
-        .anyRequest().authenticated();
+        .anyRequest().authenticated()
+      );
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
