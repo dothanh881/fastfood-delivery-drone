@@ -1,0 +1,28 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" fill="#FF3D00" rx="24"/>
+  
+  <!-- Burger Icon -->
+  <g transform="translate(48, 60)">
+    <!-- Top bun -->
+    <ellipse cx="48" cy="12" rx="46" ry="12" fill="#FFD700"/>
+    <ellipse cx="48" cy="12" rx="46" ry="8" fill="#FFA500"/>
+    
+    <!-- Lettuce -->
+    <rect x="8" y="24" width="80" height="8" fill="#32CD32" rx="2"/>
+    
+    <!-- Cheese -->
+    <polygon points="8,36 88,36 84,44 12,44" fill="#FFD700"/>
+    
+    <!-- Patty -->
+    <rect x="10" y="48" width="76" height="12" fill="#8B4513" rx="4"/>
+    
+    <!-- Bottom bun -->
+    <ellipse cx="48" cy="68" rx="44" ry="10" fill="#D2691E"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="96" y="150" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">
+    FF
+  </text>
+</svg>

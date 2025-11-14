@@ -1,0 +1,19 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#FF3D00" rx="8"/>
+  
+  <!-- Burger Icon -->
+  <g transform="translate(16, 20)">
+    <!-- Top bun -->
+    <ellipse cx="16" cy="4" rx="15" ry="4" fill="#FFD700"/>
+    
+    <!-- Lettuce -->
+    <rect x="2" y="8" width="28" height="3" fill="#32CD32" rx="1"/>
+    
+    <!-- Patty -->
+    <rect x="3" y="12" width="26" height="4" fill="#8B4513" rx="1"/>
+    
+    <!-- Bottom bun -->
+    <ellipse cx="16" cy="20" rx="14" ry="3" fill="#D2691E"/>
+  </g>
+</svg>

@@ -1,0 +1,17 @@
+node_modules
+node_modules/
+build
+dist
+.cache
+npm-debug.log
+yarn-error.log
+.DS_Store
+.git
+.gitignore
+.vscode
+.idea
+.env
+.env.local
+*.log
+.terraform
+node_modules/.cache

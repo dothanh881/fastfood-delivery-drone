@@ -1,0 +1,86 @@
+## Compose schema version line is obsolete in recent Docker Compose.
+## Remove it to silence warnings and use the latest features.
+
+services:
+  db:
+    # Pin a known working MySQL 8.x tag to avoid ambiguous 'latest' variant issues
+    image: mysql:8.0.34
+    container_name: fastfood_db
+    restart: unless-stopped
+    # Force platform to avoid "exec format error" when Docker pulls an image for a different CPU arch
+    # (e.g. arm64 image on an amd64 host). Adjust if your host is arm64.
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: fastfood_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: appsecret
+      TZ: UTC
+    command: [
+      "mysqld",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"          # host 3307 -> container 3306 (MySQL)
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    pull_policy: never
+    image: dothanh881/fastfood-backend:2.0.0
+    container_name: fastfood_backend
+    environment:
+      # Chạy với profile mặc định (sử dụng application.properties)
+      SPRING_PROFILES_ACTIVE: ""
+      DB_URL: jdbc:mysql://db:3306/fastfood_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USERNAME: appuser
+      DB_PASSWORD: appsecret
+      # VNPay real payment configuration (fill TMN_CODE & HASH_SECRET)
+      VNPAY_DEMO: "false"
+      VNPAY_TMN_CODE: ${VNPAY_TMN_CODE:-8VWZT7KJ}
+      VNPAY_HASH_SECRET: ${VNPAY_HASH_SECRET:-ANAIDKYHLTU5HVKRMUM4NVRMLCN0SJU1}
+      VNPAY_PAYMENT_URL: ${VNPAY_PAYMENT_URL:-https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
+      VNPAY_RETURN_URL: ${VNPAY_RETURN_URL:-http://localhost:3000/checkout/payment-callback}
+      # Timezone configuration for VNPay
+      VNPAY_TIMEZONE: "GMT+7"
+      TZ: Asia/Ho_Chi_Minh
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Ho_Chi_Minh -XX:+UseContainerSupport -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0"
+    
+    depends_on:
+      db:
+        condition: service_healthy   # chờ DB sẵn sàng
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_BASE_URL: "/api"
+        REACT_APP_WS_URL: "/ws"
+    pull_policy: always
+    image: dothanh881/fastfood-frontend:2.0.0
+    container_name: fastfood_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+
+volumes:
+  db_data:
+
+networks:
+  default:
+    driver: bridge
