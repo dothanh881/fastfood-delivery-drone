@@ -32,14 +32,15 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-      .csrf(csrf -> csrf.disable())
-      .securityContext(securityContext -> securityContext.requireExplicitSave(false))
-      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS toàn cục
-        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // Cho phép login POST
-        .requestMatchers("/api/auth/**").permitAll() // Cho phép toàn bộ /api/auth/**
+      http
+              .cors().and()
+              .csrf().disable()
+              .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+              .authorizeHttpRequests()
+              // Cho phép endpoints auth cả khi có context-path /api
+              .requestMatchers("/auth/**").permitAll()
+              .requestMatchers("/api/auth/**").permitAll()
+              // Error page should be publicly accessible to avoid 403 loops
         // Error page should be publicly accessible to avoid 403 loops
         .requestMatchers(HttpMethod.GET, "/error").permitAll()
         // Public static resources (served via resource handler)
