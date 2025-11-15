@@ -4,6 +4,7 @@ C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\con
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\service\impl\FleetServiceImpl.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\entity\User.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\service\api\DeliveryService.java
+C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\config\GlobalCorsConfig.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\entity\Address.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\repository\OrderActivityRepository.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\response\DroneAssignmentResponse.java

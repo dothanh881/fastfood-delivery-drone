@@ -2,6 +2,7 @@ com\fastfood\management\entity\DroneAssignment.class
 com\fastfood\management\repository\DeliveryRepository.class
 com\fastfood\management\mapper\UserMapper.class
 com\fastfood\management\repository\InventoryRepository.class
+com\fastfood\management\config\GlobalCorsConfig.class
 com\fastfood\management\dto\websocket\DeliveryEtaUpdate.class
 com\fastfood\management\service\api\InventoryService.class
 com\fastfood\management\dto\response\UserResponse.class
