@@ -105,10 +105,15 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Use allowed origin patterns so deployed frontends (with different hosts) can call API
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        // Use explicit allowed origins (do NOT use wildcard when allowCredentials=true)
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://fastfood-delivery-drone-sgu.vercel.app",
+                "https://fastfood-delivery-drone-sgu.up.railway.app",
+                "https://fastfood-dronedelivery.vercel.app",
+                "http://localhost:3000"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
         configuration.setAllowCredentials(true); // Enable credentials support
         configuration.setExposedHeaders(Arrays.asList("x-auth-token", "Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -121,17 +126,16 @@ public class WebSecurityConfig {
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        // Explicitly list known frontends and allow wildcard
-        config.setAllowedOriginPatterns(Arrays.asList(
-                "https://fastfood-dronedelivery.vercel.app",
+        // Explicitly list known frontends (no wildcard when allowCredentials=true)
+        config.setAllowedOrigins(Arrays.asList(
                 "https://fastfood-delivery-drone-sgu.vercel.app",
                 "https://fastfood-delivery-drone-sgu.up.railway.app",
-                "http://localhost:3000",
-                "*"
+                "https://fastfood-dronedelivery.vercel.app",
+                "http://localhost:3000"
         ));
         config.setAllowCredentials(true);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(0);
