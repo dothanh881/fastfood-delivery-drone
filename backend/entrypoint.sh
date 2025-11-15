@@ -1,5 +1,16 @@
 #!/bin/sh
-# Entrypoint script to unset Railway's JAVA_TOOL_OPTIONS and use our own memory settings
-unset JAVA_TOOL_OPTIONS
-exec java -Xmx180m -Xms48m -XX:MaxMetaspaceSize=90m -XX:+UseSerialGC -XX:MaxDirectMemorySize=10m -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar
-
+# Override Railway's JAVA_TOOL_OPTIONS by explicitly setting all JVM flags
+# Note: Explicit flags take precedence over JAVA_TOOL_OPTIONS
+exec java \
+  -Xmx180m \
+  -Xms48m \
+  -XX:MaxMetaspaceSize=90m \
+  -XX:+UseSerialGC \
+  -XX:MaxDirectMemorySize=10m \
+  -XX:ReservedCodeCacheSize=32m \
+  -XX:+TieredCompilation \
+  -XX:TieredStopAtLevel=1 \
+  -Djava.security.egd=file:/dev/./urandom \
+  -Dspring.jmx.enabled=false \
+  -Dspring.main.lazy-initialization=false \
+  -jar /app/app.jar
