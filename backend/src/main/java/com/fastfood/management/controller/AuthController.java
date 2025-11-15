@@ -44,64 +44,90 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
+            System.out.println("=== LOGIN ATTEMPT: " + loginRequest.getEmail() + " ===");
+
+            // Validate input
+            if (loginRequest == null || loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+                System.err.println("Invalid request: missing email or password");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Email và password không được để trống"));
+            }
+
+            System.out.println("Step 1: Finding user by email: " + loginRequest.getEmail());
             // Tìm người dùng theo email
             User user = userRepository.findByEmail(loginRequest.getEmail()).orElse(null);
             if (user == null) {
+                System.err.println("User not found: " + loginRequest.getEmail());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("message", "Email không tồn tại"));
             }
+            System.out.println("Step 2: User found: " + user.getEmail() + ", enabled: " + user.isEnabled());
+
             if (!user.isEnabled()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("message", "Tài khoản đang bị vô hiệu hoá"));
             }
+
+            System.out.println("Step 3: Checking password");
             // (BCrypt)
             boolean matches = passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash());
             if (!matches) {
+                System.err.println("Password mismatch for user: " + user.getEmail());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("message", "Sai mật khẩu"));
             }
+            System.out.println("Step 4: Password matches, generating tokens");
+
             // Tạo token JWT cơ bản
             UserDetailsImpl principal = UserDetailsImpl.build(user);
             Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
             String token = jwtTokenProvider.generateToken(authentication);
             String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
-            // Build roles list
-            java.util.Set<String> roles = user.getRoles() != null
-                    ? user.getRoles().stream().map(Role::getCode).collect(java.util.stream.Collectors.toSet())
-                    : java.util.Collections.emptySet();
+            System.out.println("Step 5: Building roles");
+            // Build roles list - handle null safely
+            java.util.Set<String> roles = new java.util.HashSet<>();
+            if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                roles = user.getRoles().stream()
+                        .filter(r -> r != null && r.getCode() != null)
+                        .map(Role::getCode)
+                        .collect(java.util.stream.Collectors.toSet());
+            }
+            System.out.println("Step 6: User roles: " + roles);
 
-            // Build myStores payload similar to /me/stores for immediate role-based routing
-            java.util.List<StoreStaff> activeStaff = storeStaffRepository.findByUserIdAndStatus(user.getId(), StoreStaff.StaffStatus.ACTIVE);
-            java.util.List<Store> managerStores = storeRepository.findByManager(user);
+            // Build myStores payload - simplified to avoid errors
+            System.out.println("Step 7: Building myStores");
+            java.util.List<java.util.Map<String, Object>> myStores = new java.util.ArrayList<>();
 
-            java.util.Map<Long, java.util.Map<String, Object>> payloadMap = new java.util.LinkedHashMap<>();
+            try {
+                java.util.List<StoreStaff> activeStaff = storeStaffRepository.findByUserIdAndStatus(user.getId(), StoreStaff.StaffStatus.ACTIVE);
+                java.util.List<Store> managerStores = storeRepository.findByManager(user);
 
-            for (Store s : managerStores) {
-                payloadMap.put(s.getId(), java.util.Map.of(
-                        "store_id", s.getId(),
-                        "store_name", s.getName(),
-                        "role", StoreStaff.StaffRole.MANAGER.name(),
-                        "isManager", true,
-                        "permissions", java.util.List.of("orders.view", "orders.approve", "inventory.view", "reports.view")
-                ));
+                for (Store s : managerStores) {
+                    myStores.add(java.util.Map.of(
+                            "store_id", s.getId(),
+                            "store_name", s.getName(),
+                            "role", "MANAGER",
+                            "isManager", true
+                    ));
+                }
+
+                for (StoreStaff ss : activeStaff) {
+                    if (ss.getStore() != null) {
+                        myStores.add(java.util.Map.of(
+                                "store_id", ss.getStore().getId(),
+                                "store_name", ss.getStore().getName(),
+                                "role", ss.getRole() != null ? ss.getRole().name() : "STAFF",
+                                "isManager", false
+                        ));
+                    }
+                }
+            } catch (Exception storeEx) {
+                System.err.println("Error building myStores (non-critical): " + storeEx.getMessage());
+                // Continue without stores - it's not critical for login
             }
 
-            for (StoreStaff ss : activeStaff) {
-                boolean isMgr = ss.getRole() == StoreStaff.StaffRole.MANAGER || (ss.getStore().getManager() != null && ss.getStore().getManager().getId().equals(user.getId()));
-                java.util.List<String> perms = isMgr ? java.util.List.of("orders.view", "orders.approve", "inventory.view", "reports.view") : java.util.List.of("orders.view", "orders.approve", "inventory.view", "reports.view");
-                java.util.Map<String, Object> entry = java.util.Map.of(
-                        "store_id", ss.getStore().getId(),
-                        "store_name", ss.getStore().getName(),
-                        "role", ss.getRole().name(),
-                        "isManager", isMgr,
-                        "permissions", perms
-                );
-                payloadMap.put(ss.getStore().getId(), entry);
-            }
-
-            java.util.List<java.util.Map<String, Object>> myStores = new java.util.ArrayList<>(payloadMap.values());
-
+            System.out.println("Step 8: Building response");
             // return
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Đăng nhập thành công");
@@ -112,13 +138,17 @@ public class AuthController {
             response.put("token", token);
             response.put("refreshToken", refreshToken);
             response.put("myStores", myStores);
+
+            System.out.println("=== LOGIN SUCCESS for " + user.getEmail() + " ===");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             // Log exception for debugging
-            System.err.println("Login error: " + e.getMessage());
+            System.err.println("=== LOGIN ERROR ===");
+            System.err.println("Error message: " + e.getMessage());
+            System.err.println("Error class: " + e.getClass().getName());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message", "Lỗi hệ thống: " + e.getMessage()));
+                    .body(Map.of("message", "Lỗi hệ thống: " + e.getMessage(), "error", e.getClass().getSimpleName()));
         }
     }
 
@@ -158,3 +188,4 @@ public class AuthController {
                 ));
     }
 }
+
