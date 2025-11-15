@@ -21,7 +21,6 @@ import java.util.Optional;
 @RequestMapping("/api/demo")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DemoController {
 
     private final OrderRepository orderRepository;

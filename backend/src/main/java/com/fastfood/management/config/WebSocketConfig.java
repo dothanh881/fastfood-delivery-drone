@@ -42,11 +42,25 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Đăng ký WebSocket endpoint với SockJS fallback
         registry.addEndpoint(websocketPath)
-                .setAllowedOriginPatterns("*")
+                .setAllowedOriginPatterns(
+                        "https://fastfood-delivery-drone-sgu.vercel.app",
+                        "https://fastfood-delivery-drone.onrender.com",
+                        "https://fastfood-dronedelivery.vercel.app",
+                        "https://*.vercel.app",
+                        "http://localhost:3000",
+                        "http://localhost:.*"
+                )
                 .withSockJS();
         
         // Endpoint không có SockJS cho native WebSocket clients
         registry.addEndpoint(websocketPath)
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns(
+                        "https://fastfood-delivery-drone-sgu.vercel.app",
+                        "https://fastfood-delivery-drone.onrender.com",
+                        "https://fastfood-dronedelivery.vercel.app",
+                        "https://*.vercel.app",
+                        "http://localhost:3000",
+                        "http://localhost:.*"
+                );
     }
 }

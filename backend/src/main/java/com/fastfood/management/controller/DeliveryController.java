@@ -25,7 +25,6 @@ import java.util.Map;
 @RequestMapping("/deliveries")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
