@@ -131,6 +131,7 @@ com\fastfood\management\service\impl\WebSocketService.class
 com\fastfood\management\config\ImagesResourceConfig.class
 com\fastfood\management\dto\response\TrackingResponse.class
 com\fastfood\management\dto\response\TrackingResponse$GpsHistoryPoint.class
+com\fastfood\management\config\CorsResponseFilter.class
 com\fastfood\management\entity\DeliveryEvent$DeliveryEventBuilder.class
 com\fastfood\management\repository\AddressRepository.class
 com\fastfood\management\repository\MenuItemRepository.class

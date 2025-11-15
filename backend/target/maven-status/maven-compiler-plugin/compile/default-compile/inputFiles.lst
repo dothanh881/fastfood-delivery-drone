@@ -44,6 +44,7 @@ C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\ser
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\service\LocalImageStorage.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\utils\VNPayUtils.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\controller\OrderController.java
+C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\config\CorsResponseFilter.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\request\DroneAssignmentRequest.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\entity\Drone.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\repository\DroneRepository.java
