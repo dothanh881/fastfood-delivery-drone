@@ -22,10 +22,9 @@ WORKDIR /app
 # Copy built jar from builder stage
 COPY --from=builder /app/backend/target/*.jar /app/app.jar
 
-ENV PORT=8080 \
-    SPRING_PROFILES_ACTIVE="" \
-    JAVA_TOOL_OPTIONS="-Xmx200m -Xms64m -XX:MaxMetaspaceSize=100m -XX:+UseSerialGC -XX:MaxDirectMemorySize=10m -Djava.security.egd=file:/dev/./urandom"
+ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/app/app.jar"]
+# Use exec form and set memory flags directly in java command to override Railway's JAVA_TOOL_OPTIONS
+CMD ["java", "-Xmx200m", "-Xms64m", "-XX:MaxMetaspaceSize=100m", "-XX:+UseSerialGC", "-XX:MaxDirectMemorySize=10m", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
