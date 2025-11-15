@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        input, button { margin: 10px 0; padding: 10px; width: 100%; }
+        #result { margin-top: 20px; padding: 15px; background: #f0f0f0; white-space: pre-wrap; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Test Login API</h1>
+
+    <div>
+        <label>Email:</label>
+        <input type="email" id="email" value="customer@example.com" />
+
+        <label>Password:</label>
+        <input type="password" id="password" value="123qwe" />
+
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="testSimpleLogin()">Test Simple Login</button>
+        <button onclick="testInitData()">Init Test Data</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            resultDiv.textContent = 'Testing login...';
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.textContent = 'SUCCESS!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.textContent = 'FAILED!\n\nStatus: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.textContent = 'ERROR!\n\n' + error.message;
+            }
+        }
+
+        async function testSimpleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            resultDiv.textContent = 'Testing simple login...';
+
+            try {
+                const response = await fetch('/api/test/simple-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.textContent = 'SIMPLE LOGIN SUCCESS!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.textContent = 'SIMPLE LOGIN FAILED!\n\nStatus: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.textContent = 'ERROR!\n\n' + error.message;
+            }
+        }
+
+        async function testInitData() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Initializing test data...';
+
+            try {
+                const response = await fetch('/api/admin/init-data', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.textContent = 'INIT DATA SUCCESS!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.textContent = 'INIT DATA FAILED!\n\nStatus: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.textContent = 'ERROR!\n\n' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-// Always use relative /api path so Vercel proxy handles backend routing (no CORS needed)
-const baseURL = '/api';
+// Use direct Render backend URL for better POST request handling
+// Vercel rewrites may have issues with POST requests
+const baseURL = 'https://fastfood-delivery-drone.onrender.com/api';
 
 const api: AxiosInstance = axios.create({
   baseURL,
