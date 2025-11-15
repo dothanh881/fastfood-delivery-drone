@@ -1,11 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-// Create axios instance with base configuration
-const isDev = process.env.NODE_ENV === 'development';
-// Prefer explicit env base URL if provided (both dev and prod), fallback to CRA proxy in dev
-const baseURL = (process.env.REACT_APP_API_BASE_URL && process.env.REACT_APP_API_BASE_URL.trim())
-  ? process.env.REACT_APP_API_BASE_URL.trim()
-  : (isDev ? '/api' : 'http://localhost:8080/api');
+// Always use relative /api path so Vercel proxy handles backend routing (no CORS needed)
+const baseURL = '/api';
 
 const api: AxiosInstance = axios.create({
   baseURL,

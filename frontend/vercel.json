@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://fastfood-delivery-drone-sgu.up.railway.app/api/:path*"
+    }
+  ]
+}
+
