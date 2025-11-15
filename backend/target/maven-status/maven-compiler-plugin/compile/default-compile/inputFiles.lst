@@ -49,7 +49,9 @@ C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\con
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\request\DroneAssignmentRequest.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\entity\Drone.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\repository\DroneRepository.java
+C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\controller\InitDataController.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\response\VNPayResponse.java
+C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\controller\HealthController.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\request\PaymentRequest.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\repository\PaymentRepository.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\service\impl\OrderServiceImpl.java
@@ -86,6 +88,7 @@ C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\ent
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\entity\InventoryTransaction.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\service\PaymentValidationService.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\security\UserDetailsImpl.java
+C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\controller\TestAuthController.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\request\MenuItemRequest.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\dto\request\RegisterRequest.java
 C:\Users\dell\Desktop\fastfood\backend\src\main\java\com\fastfood\management\service\api\PaymentService.java

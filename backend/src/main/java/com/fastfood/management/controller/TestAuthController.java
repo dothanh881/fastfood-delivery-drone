@@ -93,7 +93,6 @@ public class TestAuthController {
             Role customerRole = roleRepository.findByCode(Role.ROLE_CUSTOMER)
                 .orElseGet(() -> roleRepository.save(Role.builder()
                     .code(Role.ROLE_CUSTOMER)
-                    .name("Customer")
                     .build()));
 
             User user = User.builder()
@@ -120,4 +119,3 @@ public class TestAuthController {
         }
     }
 }
-

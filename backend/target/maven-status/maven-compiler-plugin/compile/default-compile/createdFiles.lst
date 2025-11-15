@@ -1,5 +1,6 @@
 com\fastfood\management\entity\DroneAssignment.class
 com\fastfood\management\repository\DeliveryRepository.class
+com\fastfood\management\controller\HealthController.class
 com\fastfood\management\mapper\UserMapper.class
 com\fastfood\management\repository\InventoryRepository.class
 com\fastfood\management\config\GlobalCorsConfig.class
@@ -50,6 +51,7 @@ com\fastfood\management\service\impl\DroneTrackingServiceImpl$DroneGpsData.class
 com\fastfood\management\dto\response\JwtResponse.class
 com\fastfood\management\model\MenuItemDTO$MenuItemDTOBuilder.class
 com\fastfood\management\dto\response\DeliveryResponse$GpsPositionResponse.class
+com\fastfood\management\controller\TestAuthController.class
 com\fastfood\management\mapper\PaymentMapper.class
 com\fastfood\management\entity\DeliveryEvent.class
 com\fastfood\management\entity\Feedback.class

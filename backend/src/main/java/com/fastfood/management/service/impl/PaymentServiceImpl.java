@@ -11,6 +11,7 @@ import com.fastfood.management.repository.PaymentRepository;
 import com.fastfood.management.service.api.PaymentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utils.VNPayUtils;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
     private final VNPayConfig vnPayConfig;
@@ -83,6 +85,13 @@ public class PaymentServiceImpl implements PaymentService {
             response.setPaymentUrl(paymentUrl);
             response.setTransactionReference(payment.getTransactionReference());
             return response;
+        }
+
+        // Log the create and expire dates so we can diagnose timezone/format issues in production logs
+        try {
+            log.info("VNPay dates before building URL: vnp_CreateDate={}, vnp_ExpireDate={}, vnp_TxnRef={}", vnpParams.get("vnp_CreateDate"), vnpParams.get("vnp_ExpireDate"), vnpParams.get("vnp_TxnRef"));
+        } catch (Exception ex) {
+            log.warn("Failed to log VNPay params: {}", ex.getMessage());
         }
 
         String queryUrl = VNPayUtils.generateQueryUrl(vnpParams, true);
