@@ -35,6 +35,12 @@ public class CorsResponseFilter implements Filter {
         // Log request for debugging on deployed platform
         logger.info("CORS filter invoked: method={}, uri={}, origin={}", request.getMethod(), request.getRequestURI(), origin);
 
+        // Log POST requests specially to debug login issues
+        if ("POST".equalsIgnoreCase(request.getMethod())) {
+            logger.warn("POST request detected: uri={}, origin={}, contentType={}",
+                request.getRequestURI(), origin, request.getContentType());
+        }
+
         // Set permissive headers (for debugging/compatibility). In production, consider restricting origins.
         response.setHeader("Access-Control-Allow-Origin", origin);
         response.setHeader("Vary", "Origin");
@@ -49,6 +55,12 @@ public class CorsResponseFilter implements Filter {
             return;
         }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        try {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } catch (Exception e) {
+            logger.error("Exception in filter chain: uri={}, method={}, error={}",
+                request.getRequestURI(), request.getMethod(), e.getMessage(), e);
+            throw e;
+        }
     }
 }
