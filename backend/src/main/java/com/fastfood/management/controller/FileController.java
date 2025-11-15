@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/files")
-@CrossOrigin(origins = "*")
 public class FileController {
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
     

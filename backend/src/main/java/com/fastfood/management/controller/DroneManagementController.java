@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/drone-management")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DroneManagementController {
 
     private final DroneRepository droneRepository;

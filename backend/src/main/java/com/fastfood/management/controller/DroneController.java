@@ -24,7 +24,6 @@ import java.util.Optional;
 @RequestMapping("/drone")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DroneController {
 
     private final DroneRepository droneRepository;

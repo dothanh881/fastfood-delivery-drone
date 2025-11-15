@@ -15,7 +15,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,7 +35,6 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DroneWebSocketController {
     
     private final SimpMessagingTemplate messagingTemplate;

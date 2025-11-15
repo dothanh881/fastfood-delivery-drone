@@ -13,7 +13,6 @@ import java.util.Map;
 @RequestMapping("/drone-tracking")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DroneTrackingController {
 
     private final DroneTrackingService droneTrackingService;
