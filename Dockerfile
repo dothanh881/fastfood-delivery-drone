@@ -24,8 +24,8 @@ COPY --from=builder /app/backend/target/*.jar /app/app.jar
 
 ENV PORT=8080 \
     SPRING_PROFILES_ACTIVE="" \
-    JAVA_TOOL_OPTIONS="-Xmx256m -Xms128m -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC -Djava.security.egd=file:/dev/./urandom"
+    JAVA_TOOL_OPTIONS="-Xmx200m -Xms64m -XX:MaxMetaspaceSize=100m -XX:+UseSerialGC -XX:MaxDirectMemorySize=10m -Djava.security.egd=file:/dev/./urandom"
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "java -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -jar /app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar"]
