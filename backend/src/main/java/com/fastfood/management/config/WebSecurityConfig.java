@@ -42,6 +42,8 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Allow preflight requests
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // Allow actuator health endpoint for Railway healthcheck
+                .requestMatchers("/actuator/health", "/api/actuator/health").permitAll()
                 // Cho phép endpoints auth cả khi có context-path /api
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
