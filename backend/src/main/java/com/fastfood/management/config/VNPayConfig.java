@@ -44,7 +44,8 @@ public class VNPayConfig {
     boolean vnpDemo;
 
     @Getter
-    @Value("${vnPay.timezone:GMT+7}")
+    // Use IANA timezone id for consistency
+    @Value("${vnPay.timezone:Asia/Ho_Chi_Minh}")
     String vnpTimezone;
 
     public Map<String, String> getVNPayConfig() {

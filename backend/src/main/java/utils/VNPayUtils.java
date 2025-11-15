@@ -56,25 +56,30 @@ public class VNPayUtils {
                 .collect(Collectors.joining("&"));
     }
 
-    // Default timezone helpers (backward compatibility: GMT+7)
+    // Default timezone helpers (use Asia/Ho_Chi_Minh to ensure correct VN time)
     public static String getCreateDate() {
-        return getCreateDate("GMT+7");
+        return getCreateDate("Asia/Ho_Chi_Minh");
     }
 
     public static String getExpireDate() {
-        return getExpireDate("GMT+7");
+        return getExpireDate("Asia/Ho_Chi_Minh");
     }
 
     // Timezone-aware helpers
     public static String getCreateDate(String timezoneId) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timezoneId != null ? timezoneId : "GMT+7"));
+        TimeZone tz = TimeZone.getTimeZone(timezoneId != null ? timezoneId : "Asia/Ho_Chi_Minh");
+        // Ensure the formatter uses the same timezone as the Calendar so the output matches VN local time
+        formatter.setTimeZone(tz);
+        Calendar cal = Calendar.getInstance(tz);
         return formatter.format(cal.getTime());
     }
 
     public static String getExpireDate(String timezoneId) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timezoneId != null ? timezoneId : "GMT+7"));
+        TimeZone tz = TimeZone.getTimeZone(timezoneId != null ? timezoneId : "Asia/Ho_Chi_Minh");
+        formatter.setTimeZone(tz);
+        Calendar cal = Calendar.getInstance(tz);
 
         // Add 15 minutes to the current date and time
         cal.add(Calendar.MINUTE, 15);

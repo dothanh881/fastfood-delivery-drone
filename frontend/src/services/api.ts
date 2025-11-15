@@ -4,8 +4,8 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 // Local: http://localhost:8080/api
 // Production: https://fastfood-delivery-drone.onrender.com/api
 const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
-const baseURL = isDevelopment
-  ? 'http://localhost:8080/api'
+const baseURL = isDevelopment 
+  ? 'http://localhost:8080/api' 
   : 'https://fastfood-delivery-drone.onrender.com/api';
 
 console.log('API Base URL:', baseURL, '(Environment:', process.env.NODE_ENV, ')');

@@ -1,7 +1,12 @@
 #!/bin/sh
 # Override Railway's JAVA_TOOL_OPTIONS by explicitly setting all JVM flags
 # Note: Explicit flags take precedence over JAVA_TOOL_OPTIONS
+
+# Use PORT from environment (Render/Railway) or default to 8080
+PORT=${PORT:-8080}
+
 exec java \
+  -Dserver.port=$PORT \
   -Xmx180m \
   -Xms48m \
   -XX:MaxMetaspaceSize=90m \

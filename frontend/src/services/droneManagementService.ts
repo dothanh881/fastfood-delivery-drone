@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api';
+// Auto-detect environment and use appropriate backend URL
+const isDevelopment = process.env.NODE_ENV === 'development' || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+const API_BASE_URL = isDevelopment
+  ? 'http://localhost:8080/api'
+  : 'https://fastfood-delivery-drone.onrender.com/api';
 
 export interface DroneFleet {
   id: string;
