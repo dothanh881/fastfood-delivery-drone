@@ -14,7 +14,9 @@ public class GlobalCorsConfig implements WebMvcConfigurer {
                         "https://fastfood-delivery-drone-sgu.vercel.app",
                         "https://fastfood-delivery-drone-sgu.up.railway.app",
                         "https://fastfood-dronedelivery.vercel.app",
-                        "http://localhost:3000"
+                        "https://*.vercel.app",  // Allow all Vercel preview deployments
+                        "http://localhost:3000",
+                        "http://localhost:*"  // Allow any local port
                 )
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

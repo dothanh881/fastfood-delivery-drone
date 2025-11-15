@@ -107,12 +107,14 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Use explicit allowed origins (do NOT use wildcard when allowCredentials=true)
-        configuration.setAllowedOrigins(Arrays.asList(
+        // Use allowedOriginPatterns to support wildcards with allowCredentials=true
+        configuration.setAllowedOriginPatterns(Arrays.asList(
                 "https://fastfood-delivery-drone-sgu.vercel.app",
                 "https://fastfood-delivery-drone.onrender.com",
                 "https://fastfood-dronedelivery.vercel.app",
-                "http://localhost:3000"
+                "https://*.vercel.app",  // Allow all Vercel preview deployments
+                "http://localhost:3000",
+                "http://localhost:*"  // Allow any local port
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
@@ -128,12 +130,14 @@ public class WebSecurityConfig {
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        // Explicitly list known frontends (no wildcard when allowCredentials=true)
-        config.setAllowedOrigins(Arrays.asList(
+        // Use allowedOriginPatterns to support wildcards with allowCredentials=true
+        config.setAllowedOriginPatterns(Arrays.asList(
                 "https://fastfood-delivery-drone-sgu.vercel.app",
                 "https://fastfood-delivery-drone.onrender.com",
                 "https://fastfood-dronedelivery.vercel.app",
-                "http://localhost:3000"
+                "https://*.vercel.app",  // Allow all Vercel preview deployments
+                "http://localhost:3000",
+                "http://localhost:*"  // Allow any local port
         ));
         config.setAllowCredentials(true);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
