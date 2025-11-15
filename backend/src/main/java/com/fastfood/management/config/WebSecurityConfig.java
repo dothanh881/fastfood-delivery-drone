@@ -110,7 +110,7 @@ public class WebSecurityConfig {
         // Use explicit allowed origins (do NOT use wildcard when allowCredentials=true)
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://fastfood-delivery-drone-sgu.vercel.app",
-                "https://fastfood-delivery-drone-sgu.up.railway.app",
+                "https://fastfood-delivery-drone.onrender.com",
                 "https://fastfood-dronedelivery.vercel.app",
                 "http://localhost:3000"
         ));
@@ -131,7 +131,7 @@ public class WebSecurityConfig {
         // Explicitly list known frontends (no wildcard when allowCredentials=true)
         config.setAllowedOrigins(Arrays.asList(
                 "https://fastfood-delivery-drone-sgu.vercel.app",
-                "https://fastfood-delivery-drone-sgu.up.railway.app",
+                "https://fastfood-delivery-drone.onrender.com",
                 "https://fastfood-dronedelivery.vercel.app",
                 "http://localhost:3000"
         ));
