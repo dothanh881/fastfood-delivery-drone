@@ -14,12 +14,22 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsResponseFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(CorsResponseFilter.class);
+
+    // List of allowed origins - support wildcard matching
+    private static final List<String> ALLOWED_ORIGIN_PATTERNS = Arrays.asList(
+            "https://fastfood-delivery-drone-sgu.vercel.app",
+            "https://fastfood-delivery-drone.onrender.com",
+            "https://fastfood-dronedelivery.vercel.app",
+            "http://localhost:3000"
+    );
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -28,9 +38,6 @@ public class CorsResponseFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String origin = request.getHeader("Origin");
-        if (origin == null || origin.isBlank()) {
-            origin = "*"; // fallback
-        }
 
         // Log request for debugging on deployed platform
         logger.info("CORS filter invoked: method={}, uri={}, origin={}", request.getMethod(), request.getRequestURI(), origin);
@@ -41,13 +48,20 @@ public class CorsResponseFilter implements Filter {
                 request.getRequestURI(), origin, request.getContentType());
         }
 
-        // Set permissive headers (for debugging/compatibility). In production, consider restricting origins.
-        response.setHeader("Access-Control-Allow-Origin", origin);
-        response.setHeader("Vary", "Origin");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept,X-Requested-With");
-        response.setHeader("Access-Control-Expose-Headers", "Authorization,x-auth-token");
+        // Only set CORS headers if origin is present and allowed
+        if (origin != null && !origin.isBlank()) {
+            // Check if origin is allowed (exact match or Vercel/localhost pattern match)
+            if (isOriginAllowed(origin)) {
+                response.setHeader("Access-Control-Allow-Origin", origin);
+                response.setHeader("Vary", "Origin");
+                response.setHeader("Access-Control-Allow-Credentials", "true");
+                response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH");
+                response.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept,X-Requested-With");
+                response.setHeader("Access-Control-Expose-Headers", "Authorization,x-auth-token");
+            } else {
+                logger.warn("Origin not allowed: {}", origin);
+            }
+        }
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             logger.info("CORS preflight request - returning 200 OK for uri={}", request.getRequestURI());
@@ -62,5 +76,27 @@ public class CorsResponseFilter implements Filter {
                 request.getRequestURI(), request.getMethod(), e.getMessage(), e);
             throw e;
         }
+    }
+
+    // Check if origin matches allowed patterns
+    private boolean isOriginAllowed(String origin) {
+        if (origin == null) return false;
+
+        // Check exact matches first
+        if (ALLOWED_ORIGIN_PATTERNS.contains(origin)) {
+            return true;
+        }
+
+        // Allow all Vercel deployments
+        if (origin.endsWith(".vercel.app")) {
+            return true;
+        }
+
+        // Allow all localhost with any port
+        if (origin.startsWith("http://localhost:") || origin.equals("http://localhost")) {
+            return true;
+        }
+
+        return false;
     }
 }
