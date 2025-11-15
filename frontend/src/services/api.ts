@@ -1,8 +1,14 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-// Use direct Render backend URL for better POST request handling
-// Vercel rewrites may have issues with POST requests
-const baseURL = 'https://fastfood-delivery-drone.onrender.com/api';
+// Auto-detect environment and use appropriate backend URL
+// Local: http://localhost:8080/api
+// Production: https://fastfood-delivery-drone.onrender.com/api
+const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
+const baseURL = isDevelopment
+  ? 'http://localhost:8080/api'
+  : 'https://fastfood-delivery-drone.onrender.com/api';
+
+console.log('API Base URL:', baseURL, '(Environment:', process.env.NODE_ENV, ')');
 
 const api: AxiosInstance = axios.create({
   baseURL,
