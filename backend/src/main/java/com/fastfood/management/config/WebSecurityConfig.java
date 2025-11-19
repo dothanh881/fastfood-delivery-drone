@@ -107,17 +107,12 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Use allowedOriginPatterns to support wildcards with allowCredentials=true
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-                "https://fastfood-delivery-drone-sgu.vercel.app",
-                "https://fastfood-delivery-drone.onrender.com",
-                "https://fastfood-dronedelivery.vercel.app",
-                "https://*.vercel.app",  // Allow all Vercel preview deployments
-                "http://localhost:3000",
-                "http://localhost:*"  // Allow any local port
-        ));
+        // During troubleshooting allow any origin pattern so browsers can send Authorization header.
+        // This is intentionally permissive; narrow to specific origins before production.
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
+        // Allow all request headers to avoid CORS preflight rejections when clients send custom headers
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // Enable credentials support
         configuration.setExposedHeaders(Arrays.asList("x-auth-token", "Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -130,18 +125,13 @@ public class WebSecurityConfig {
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        // Use allowedOriginPatterns to support wildcards with allowCredentials=true
-        config.setAllowedOriginPatterns(Arrays.asList(
-                "https://fastfood-delivery-drone-sgu.vercel.app",
-                "https://fastfood-delivery-drone.onrender.com",
-                "https://fastfood-dronedelivery.vercel.app",
-                "https://*.vercel.app",  // Allow all Vercel preview deployments
-                "http://localhost:3000",
-                "http://localhost:*"  // Allow any local port
-        ));
+        // During troubleshooting allow any origin pattern so browsers can send Authorization header.
+        // This is intentionally permissive; narrow to specific origins before production.
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
         config.setAllowCredentials(true);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
+        // Allow all headers in the global CorsFilter as well
+        config.setAllowedHeaders(Arrays.asList("*"));
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(0);

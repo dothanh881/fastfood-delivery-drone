@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.jsonwebtoken.io.Decoders;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest; // added import
 
 @Component
 public class JwtTokenProvider {
@@ -47,12 +48,19 @@ public class JwtTokenProvider {
             } else {
                 keyBytes = secret.getBytes(StandardCharsets.UTF_8);
             }
-            if (keyBytes.length < 64) { // HS512 requires >= 64 bytes
-                logger.warn("JWT secret is {} bytes (<64). Generating a secure HS512 key.", keyBytes.length);
-                this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-            } else {
-                this.key = Keys.hmacShaKeyFor(keyBytes);
+            // If the provided secret is shorter than required for HS512, derive a stable 64-byte key
+            if (keyBytes.length < 64) {
+                logger.warn("JWT secret is {} bytes (<64). Deriving a stable HS512 key by hashing the secret.", keyBytes.length);
+                try {
+                    MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
+                    keyBytes = sha512.digest(keyBytes);
+                } catch (Exception e) {
+                    logger.error("Failed to derive SHA-512 from jwt secret: {}. Falling back to generating a secure HS512 key.", e.getMessage());
+                    this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+                    return;
+                }
             }
+            this.key = Keys.hmacShaKeyFor(keyBytes);
         } catch (Exception e) {
             logger.error("Failed to initialize JWT signing key, generating secure HS512 key. Error: {}", e.getMessage());
             this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);

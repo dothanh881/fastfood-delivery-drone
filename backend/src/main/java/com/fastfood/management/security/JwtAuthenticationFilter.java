@@ -39,11 +39,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
+            String bearer = request.getHeader("Authorization");
+            if (!StringUtils.hasText(bearer)) {
+                logger.info("[JWT] No Authorization header present for request: " + request.getRequestURI());
+            } else {
+                logger.info("[JWT] Authorization header present (masked): " + (bearer.length() > 20 ? bearer.substring(0, 20) + "..." : bearer));
+            }
+
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Authentication authentication = tokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.info("[JWT] Authentication set for user: " + (authentication.getName()));
+                try {
+                    logger.info("[JWT] Authorities: " + authentication.getAuthorities());
+                } catch (Exception ignored) { }
+            } else if (StringUtils.hasText(jwt)) {
+                logger.info("[JWT] JWT token present but invalid for request: " + request.getRequestURI());
             }
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);
